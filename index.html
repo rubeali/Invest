@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Taka Money - আপনার ডিজিটাল আয়ের বিশ্বস্ত সঙ্গী</title>
     <meta name="description" content="Taka Money-এর মাধ্যমে নিরাপদে ইনভেস্ট করুন এবং প্রতিদিন আকর্ষণীয় রিটার্ন পান। আধুনিক, নিরাপদ এবং ব্যবহারকারী-বান্ধব প্ল্যাটফর্ম।">
-    <meta name="keywords" content="taka money, online income, investment, bKash deposit, daily income, Bangladesh, earn money online, referral income">
+    <meta name="keywords" content="taka money, online income, investment, bKash deposit, daily income, Bangladesh, earn money online, referral income, admin panel">
     
     <!-- External Libraries (CDN) -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -19,7 +19,7 @@
     <style>
         /* 
         =====================================================================
-        MASTER STYLESHEET FOR Taka Money APPLICATION (MODIFIED)
+        MASTER STYLESHEET FOR Taka Money APPLICATION (MODIFIED WITH ADMIN PANEL)
         This block contains all combined CSS with new VFX and UI changes.
         =====================================================================
         */
@@ -193,24 +193,30 @@
         .stat-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
         .stat-card .icon-bg { position: absolute; top: 1.5rem; right: 1.5rem; font-size: 3rem; color: rgba(100, 116, 139, 0.1); transform: rotate(-15deg); }
         
-        /* MODIFIED: Unified Dashboard Tabs */
-        .dashboard-tab-button {
+        /* MODIFIED: Unified Dashboard/Admin Tabs */
+        .dashboard-tab-button, .admin-tab-button {
             padding: 0.75rem 1.5rem; font-weight: 600; color: var(--slate-400); 
             border-bottom: 3px solid transparent; transition: color 0.3s, border-color 0.3s;
             white-space: nowrap;
         }
-        .dashboard-tab-button.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
-        .dashboard-tab-content { display: none; animation: fadeIn 0.5s ease; }
-        .dashboard-tab-content.active { display: block; }
+        .dashboard-tab-button.active, .admin-tab-button.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
+        .dashboard-tab-content, .admin-tab-content { display: none; animation: fadeIn 0.5s ease; }
+        .dashboard-tab-content.active, .admin-tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .dashboard-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-        .dashboard-table thead th { padding: 1rem; text-align: left; font-size: 0.875rem; color: var(--slate-400); text-transform: uppercase; border-bottom: 2px solid var(--slate-700); }
+        .dashboard-table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.9rem; }
+        .dashboard-table thead th { padding: 1rem; text-align: left; font-size: 0.8rem; color: var(--slate-400); text-transform: uppercase; border-bottom: 2px solid var(--slate-700); }
         .dashboard-table tbody td { padding: 1rem; border-bottom: 1px solid var(--slate-800); }
         .dashboard-table tbody tr:last-child td { border-bottom: none; }
         .status-badge { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.8rem; font-weight: 600; }
         .status-success { background-color: rgba(16, 185, 129, 0.1); color: #34d399; }
         .status-pending { background-color: rgba(245, 158, 11, 0.1); color: #fcd34d; }
+        .status-rejected { background-color: rgba(239, 68, 68, 0.1); color: #f87171; }
+
+        /* NEW: Admin action button */
+        .admin-action-btn {
+            padding: 0.3rem 0.8rem; font-size: 0.8rem; font-weight: 600; border-radius: 0.375rem; transition: background-color 0.2s;
+        }
         
         /* Levels Page Styles */
         .level-card.active { border-color: var(--primary-color); box-shadow: 0 0 40px rgba(16, 185, 129, 0.5); transform: scale(1.05); }
@@ -334,7 +340,7 @@
 
                     <!-- Tab: Withdraw -->
                     <div id="tab-withdraw" class="dashboard-tab-content">
-                        <div class="flex justify-center"><div class="w-full max-w-lg"><div class="glass-card p-8 md:p-12"><div class="text-center mb-8"><h1 class="text-4xl font-bold text-white text-shadow-emerald">টাকা উত্তোলন</h1><p class="text-slate-400 mt-2">আপনার আয়কৃত টাকা সহজেই উত্তোলন করুন।</p></div><div class="bg-gradient-to-r from-slate-800 to-slate-700 p-4 rounded-lg text-center mb-6 border-l-4 border-emerald-400"><p class="text-sm uppercase text-slate-400">আপনার বর্তমান ব্যালেন্স</p><p id="withdrawPageBalance" class="text-4xl font-bold text-white mt-1">৳ 0.00</p></div><div class="bg-slate-800/50 p-4 rounded-lg text-center mb-8"><p class="text-emerald-300">উইথড্র করার জন্য মিনিমাম <strong class="text-white">৩০০ টাকা</strong> প্রয়োজন।</p></div><form id="withdrawForm" class="space-y-6" novalidate><div><label for="withdrawAmount" class="block mb-2 text-sm font-medium text-slate-300">উইথড্র পরিমাণ</label><input type="number" id="withdrawAmount" name="withdrawAmount" class="form-input" placeholder="টাকার পরিমাণ লিখুন" required></div><div><label for="bKashNumberWithdraw" class="block mb-2 text-sm font-medium text-slate-300">আপনার বিকাশ নাম্বার</label><input type="tel" id="bKashNumberWithdraw" name="bKashNumberWithdraw" class="form-input" placeholder="01..." required pattern="01[3-9]\d{8}"></div><button type="submit" id="withdrawSubmitBtn" class="w-full cta-button py-3 text-lg flex items-center justify-center gap-2"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg><span>রিকোয়েস্ট পাঠান</span></button></form></div></div></div>
+                        <div class="flex justify-center"><div class="w-full max-w-lg"><div class="glass-card p-8 md:p-12"><div class="text-center mb-8"><h1 class="text-4xl font-bold text-white text-shadow-emerald">টাকা উত্তোলন</h1><p class="text-slate-400 mt-2">আপনার আয়কৃত টাকা সহজেই উত্তোলন করুন।</p></div><div class="bg-gradient-to-r from-slate-800 to-slate-700 p-4 rounded-lg text-center mb-6 border-l-4 border-emerald-400"><p class="text-sm uppercase text-slate-400">আপনার বর্তমান ব্যালেন্স</p><p id="withdrawPageBalance" class="text-4xl font-bold text-white mt-1">৳ 0.00</p></div><div class="bg-slate-800/50 p-4 rounded-lg text-center mb-8"><p class="text-emerald-300">উইথড্র করার জন্য মিনিমাম <strong class="text-white">৩০০ টাকা</strong> প্রয়োজন।</p></div><form id="withdrawForm" class="space-y-6" novalidate><div><label for="withdrawAmount" class="block mb-2 text-sm font-medium text-slate-300">উইথড্র পরিমাণ</label><input type="number" id="withdrawAmount" name="withdrawAmount" class="form-input" placeholder="টাকার পরিমাণ লিখুন" required></div><div><label for="bKashNumberWithdraw" class="block mb-2 text-sm font-medium text-slate-300">আপনার বিকাশ নাম্বার</label><input type="tel" id="bKashNumberWithdraw" name="bKashNumberWithdraw" class="form-input" placeholder="01..." required pattern="01[3-9]\d{8}"></div><button type="submit" id="withdrawSubmitBtn" class="w-full cta-button py-3 text-lg flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg><span>রিকোয়েস্ট পাঠান</span></button></form></div></div></div>
                     </div>
 
                     <!-- Tab: Income Today -->
@@ -351,11 +357,70 @@
                     <div id="tab-referral" class="dashboard-tab-content">
                         <div class="flex justify-center"><div class="w-full max-w-3xl"><div class="glass-card p-8 md:p-12"><div class="text-center mb-8"><h1 class="text-4xl font-bold text-white text-shadow-emerald">রেফার করে আয় করুন</h1><p class="text-slate-400 mt-2">আপনার বন্ধুদের আমন্ত্রণ জানান এবং বোনাস জিতুন।</p></div><div class="mb-8"><h3 class="text-xl font-semibold text-white mb-4">আপনার রেফারেল লিংক</h3><div class="bg-slate-800 border-2 dashed border-slate-600 p-4 rounded-lg flex flex-col sm:flex-row items-center justify-between gap-4"><span id="referralLink" class="text-sm sm:text-base font-mono text-emerald-300 break-all">লিংক তৈরি হচ্ছে...</span><button id="copyReferralButton" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 px-4 rounded-md flex-shrink-0">লিংক কপি করুন</button></div></div><div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-center"><div class="bg-slate-800/50 p-6 rounded-lg"><p class="text-slate-400 text-sm font-medium uppercase">মোট রেফারেল</p><p id="referralCount" class="text-3xl font-bold text-white mt-1">0</p></div><div class="bg-slate-800/50 p-6 rounded-lg"><p class="text-slate-400 text-sm font-medium uppercase">রেফারেল থেকে আয়</p><p id="referralEarnings" class="text-3xl font-bold text-white mt-1">৳ 0.00</p></div></div><p class="text-xs text-slate-500 mt-6 text-center">দ্রষ্টব্য: এটি একটি সিমুলেটেড বৈশিষ্ট্য। বাস্তব প্রয়োগের জন্য একটি সার্ভার-সাইড ব্যাকএন্ড প্রয়োজন।</p></div></div></div>
                     </div>
-
                 </div>
             </main>
         </div>
 
+        <!-- ===================================================================== -->
+        <!-- NEW: VIEW 3: ADMIN PANEL PAGE                                         -->
+        <!-- ===================================================================== -->
+        <div id="page-admin" class="page-view">
+             <main class="container mx-auto px-6 py-10">
+                <h1 class="text-4xl font-bold text-white mb-2">অ্যাডমিন প্যানেল</h1>
+                <p class="text-slate-400 mb-8">সাইটের সকল ব্যবহারকারী এবং লেনদেন পরিচালনা করুন।</p>
+
+                <!-- Admin Tabs Navigation -->
+                <div class="border-b border-slate-700 mb-8">
+                    <nav class="-mb-px flex space-x-2 sm:space-x-6 overflow-x-auto" id="admin-tabs">
+                        <button data-tab="admin-overview" class="admin-tab-button active">সারসংক্ষেপ</button>
+                        <button data-tab="admin-deposits" class="admin-tab-button">ডিপোজিট</button>
+                        <button data-tab="admin-withdrawals" class="admin-tab-button">উইথড্রয়াল</button>
+                        <button data-tab="admin-users" class="admin-tab-button">ব্যবহারকারী</button>
+                    </nav>
+                </div>
+                
+                <!-- Admin Tab Content -->
+                <div id="admin-content">
+                    <!-- Tab: Admin Overview -->
+                    <div id="tab-admin-overview" class="admin-tab-content active">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+                            <div class="stat-card"><div class="icon-bg">👥</div><p class="text-slate-400 text-sm font-medium uppercase">মোট ব্যবহারকারী</p><p class="text-3xl font-bold text-white mt-1" id="adminTotalUsers">0</p></div>
+                            <div class="stat-card"><div class="icon-bg">💰</div><p class="text-slate-400 text-sm font-medium uppercase">মোট ডিপোজিট</p><p class="text-3xl font-bold text-emerald-400 mt-1" id="adminTotalDeposit">৳ 0.00</p></div>
+                            <div class="stat-card"><div class="icon-bg">💸</div><p class="text-slate-400 text-sm font-medium uppercase">মোট উইথড্র</p><p class="text-3xl font-bold text-rose-400 mt-1" id="adminTotalWithdraw">৳ 0.00</p></div>
+                            <div class="stat-card"><div class="icon-bg">⏳</div><p class="text-slate-400 text-sm font-medium uppercase">পেন্ডিং উইথড্র</p><p class="text-3xl font-bold text-amber-400 mt-1" id="adminPendingWithdraw">0</p></div>
+                        </div>
+                         <div class="glass-card p-6">
+                            <h2 class="text-xl font-bold text-white mb-4">সাম্প্রতিক কার্যক্রম</h2>
+                            <div class="overflow-x-auto"><table class="dashboard-table min-w-full"><thead class=""><tr><th>ব্যবহারকারী</th><th>অ্যাকশন</th><th>পরিমাণ</th><th>তারিখ</th></tr></thead><tbody id="adminRecentActivity"></tbody></table></div>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Admin Deposits -->
+                    <div id="tab-admin-deposits" class="admin-tab-content">
+                        <div class="glass-card p-6">
+                            <h2 class="text-xl font-bold text-white mb-4">সকল ডিপোজিট</h2>
+                            <div class="overflow-x-auto"><table class="dashboard-table min-w-full"><thead><tr><th>ব্যবহারকারী</th><th>মোবাইল</th><th>পরিমাণ</th><th>TrxID</th><th>তারিখ</th></tr></thead><tbody id="adminDepositsTableBody"></tbody></table></div>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Admin Withdrawals -->
+                    <div id="tab-admin-withdrawals" class="admin-tab-content">
+                         <div class="glass-card p-6">
+                            <h2 class="text-xl font-bold text-white mb-4">সকল উইথড্র রিকোয়েস্ট</h2>
+                            <div class="overflow-x-auto"><table class="dashboard-table min-w-full"><thead><tr><th>ব্যবহারকারী</th><th>বিকাশ নম্বর</th><th>পরিমাণ</th><th>স্ট্যাটাস</th><th>তারিখ</th><th>অ্যাকশন</th></tr></thead><tbody id="adminWithdrawalsTableBody"></tbody></table></div>
+                        </div>
+                    </div>
+
+                     <!-- Tab: Admin Users -->
+                    <div id="tab-admin-users" class="admin-tab-content">
+                        <div class="glass-card p-6">
+                            <h2 class="text-xl font-bold text-white mb-4">সকল ব্যবহারকারী</h2>
+                            <div class="overflow-x-auto"><table class="dashboard-table min-w-full"><thead><tr><th>নাম</th><th>মোবাইল</th><th>ব্যালেন্স</th><th>লেভেল</th><th>যোগদান</th><th>অ্যাকশন</th></tr></thead><tbody id="adminUsersTableBody"></tbody></table></div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
     </div>
     
     <!-- Modals (Global) -->
@@ -365,16 +430,34 @@
             <lottie-player id="lottie-success" src="https://assets1.lottiefiles.com/packages/lf20_vuu2h5j2.json" background="transparent" speed="1" style="width: 150px; height: 150px; margin: 0 auto;"></lottie-player>
             <h2 id="confirmation-title" class="text-2xl font-bold text-white mt-4 mb-2">সফল হয়েছে!</h2>
             <p id="confirmation-message" class="text-slate-400 mb-6">আপনার অনুরোধ গ্রহণ করা হয়েছে।</p>
-            <button id="confirmation-close-btn" class="cta-button">বন্ধ করুন</button>
+            <button id="confirmation-close-btn" class="cta-button-animated"><span>বন্ধ করুন</span></button>
         </div>
     </div>
-    <!-- NEW: Level Up VFX Modal -->
     <div id="levelUpModal" class="modal-overlay">
          <div class="modal-content text-center overflow-hidden">
             <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_p23cs1e5.json" background="transparent" speed="1" style="width: 250px; height: 250px; margin: -50px auto -60px;"></lottie-player>
             <h2 class="text-3xl font-extrabold text-white mt-4 mb-2">অভিনন্দন! লেভেল আপ!</h2>
             <p id="level-up-message" class="text-emerald-300 text-lg mb-6">আপনি একটি নতুন লেভেলে উন্নীত হয়েছেন!</p>
             <button id="level-up-close-btn" class="cta-button-animated"><span>দারুণ!</span></button>
+        </div>
+    </div>
+    <!-- NEW: Admin Edit User Modal -->
+    <div id="editUserModal" class="modal-overlay">
+         <div class="modal-content">
+            <button id="editUser-close-btn" class="modal-close-btn">&times;</button>
+            <h2 class="text-2xl font-bold text-white mb-6">ব্যবহারকারীর তথ্য পরিবর্তন করুন</h2>
+            <form id="editUserForm" class="space-y-4">
+                <input type="hidden" id="editUserMobile">
+                <div>
+                    <label for="editUserBalance" class="block mb-2 text-sm font-medium text-slate-300">বর্তমান ব্যালেন্স</label>
+                    <input type="number" id="editUserBalance" class="form-input" required step="any">
+                </div>
+                <div>
+                    <label for="editUserLevel" class="block mb-2 text-sm font-medium text-slate-300">বর্তমান লেভেল</label>
+                    <input type="number" id="editUserLevel" class="form-input" required min="0" max="4">
+                </div>
+                 <button type="submit" class="w-full cta-button-animated py-3"><span>পরিবর্তন সেভ করুন</span></button>
+            </form>
         </div>
     </div>
 
@@ -384,12 +467,18 @@
         <div class="container mx-auto px-6 py-8 text-center text-slate-400">
             <p>&copy; 2023 Taka Money. সর্বস্বত্ব সংরক্ষিত।</p>
             <p class="text-sm mt-2">দয়া করে মনে রাখবেন: এটি একটি ডেমো এবং সিমুলেশন প্রকল্প। এখানে কোনো বাস্তব আর্থিক লেনদেন করা উচিত নয়।</p>
+            
+            <!-- NEW: Admin Login Link -->
+            <p class="mt-4">
+                <a href="#admin" class="nav-link text-emerald-400 hover:underline">অ্যাডমিন লগইন</a>
+            </p>
+
         </div>
     </footer>
 
 <script>
 // =================================================================================================
-// MASTER JAVASCRIPT FOR Taka Money SINGLE PAGE APPLICATION (MODIFIED)
+// MASTER JAVASCRIPT FOR Taka Money SINGLE PAGE APPLICATION (MODIFIED WITH ADMIN PANEL)
 // This script controls routing, state management, and all functionalities for the entire app.
 // =================================================================================================
 'use strict';
@@ -398,7 +487,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- SECTION: APPLICATION CONSTANTS & CONFIGURATION ---
     const AUTH_KEY = 'takamoney_auth_user';
     const LOGGED_IN_KEY = 'takamoney_is_logged_in';
-    const TELEGRAM_CHAT_ID = '7281075902'; // Admin's Telegram Chat ID
+    const ALL_USERS_KEY = 'takamoney_all_users_db'; // NEW: For admin panel simulation
+    const ADMIN_PASS = 'admin123'; // NEW: Simple password for admin access
 
     const MIN_WITHDRAW_AMOUNT = 300;
     const MAX_DEPOSIT_AMOUNT = 100;
@@ -414,20 +504,33 @@ document.addEventListener('DOMContentLoaded', () => {
     let incomeChartInstance = null; // To hold the chart instance
 
     // --- SECTION: CORE STATE MANAGEMENT (Data Layer) ---
+    // NEW: Functions to manage the simulated central database
+    const getAllUsers = () => JSON.parse(localStorage.getItem(ALL_USERS_KEY)) || [];
+    const saveAllUsers = (users) => localStorage.setItem(ALL_USERS_KEY, JSON.stringify(users));
+
     const getUserData = () => {
         try {
             const user = JSON.parse(localStorage.getItem(AUTH_KEY));
-            // NEW: Added referralData to default user object
             const defaultUser = { username: 'Guest', mobile: '', joinDate: '', balance: 0, level: 0, lastClaimedDate: null, depositHistory: [], withdrawHistory: [], incomeHistory: [], referralData: { count: 0, earnings: 0 } };
             return user ? { ...defaultUser, ...user } : null;
         } catch {
             return null;
         }
     };
-
+    
+    // MODIFIED: saveUserData now updates both current user's session and the central DB
     const saveUserData = (userData) => {
-        if (!isLoggedIn()) return;
+        if (!isLoggedIn() || !userData) return;
         localStorage.setItem(AUTH_KEY, JSON.stringify(userData));
+        
+        // Update the central database
+        let allUsers = getAllUsers();
+        const userIndex = allUsers.findIndex(u => u.mobile === userData.mobile);
+        if (userIndex > -1) {
+            allUsers[userIndex] = userData;
+            saveAllUsers(allUsers);
+        }
+        
         window.dispatchEvent(new CustomEvent('userDataChanged', { detail: userData }));
     };
 
@@ -487,7 +590,6 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     document.getElementById('confirmation-close-btn').addEventListener('click', () => document.getElementById('confirmationModal').classList.remove('active'));
 
-    // NEW: Level Up Modal Function
     const showLevelUpModal = (newLevel) => {
         const modal = document.getElementById('levelUpModal');
         document.getElementById('level-up-message').innerHTML = `আপনি সফলভাবে <strong class="text-white">Level ${newLevel}</strong>-এ উন্নীত হয়েছেন!`;
@@ -498,7 +600,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const animateValue = (id, start, end, duration, prefix = '', suffix = '') => {
         const obj = document.getElementById(id);
-        if (!obj || start === end) { if(obj) obj.textContent = `${prefix}${end.toFixed(2)}${suffix}`; return; }
+        if (!obj || (start === end && !isNaN(end))) { if(obj) obj.textContent = `${prefix}${typeof end === 'number' ? end.toFixed(2) : end}${suffix}`; return; }
         let startTimestamp = null;
         const step = (timestamp) => {
             if (!startTimestamp) startTimestamp = timestamp;
@@ -519,6 +621,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('loginForm').addEventListener('submit', handleLogin);
     };
 
+    // MODIFIED: handleLogin now saves to central DB
     const handleLogin = (e) => {
         e.preventDefault();
         const username = document.getElementById('username').value.trim();
@@ -527,13 +630,29 @@ document.addEventListener('DOMContentLoaded', () => {
             showNotification('সঠিক নাম ও মোবাইল নাম্বার দিন।', 'error');
             return;
         }
-        const userData = {
-            username, mobile, joinDate: new Date().toISOString(), balance: 0, level: 0,
-            lastClaimedDate: null, depositHistory: [], withdrawHistory: [], incomeHistory: [],
-            referralData: { count: 0, earnings: 0 } // Initialize referral data
-        };
+
+        let allUsers = getAllUsers();
+        let userExists = allUsers.find(u => u.mobile === mobile);
+        let userData;
+
+        if (userExists) {
+            // User exists, log them in
+            userData = userExists;
+            userData.username = username; // Allow username update on login
+        } else {
+            // New user, register them
+            userData = {
+                username, mobile, joinDate: new Date().toISOString(), balance: 0, level: 0,
+                lastClaimedDate: null, depositHistory: [], withdrawHistory: [], incomeHistory: [],
+                referralData: { count: 0, earnings: 0 }
+            };
+            allUsers.push(userData);
+        }
+        
+        saveAllUsers(allUsers);
         localStorage.setItem(AUTH_KEY, JSON.stringify(userData));
         localStorage.setItem(LOGGED_IN_KEY, 'true');
+        
         document.getElementById('loginModal').classList.remove('active');
         showNotification(`স্বাগতম, ${username}!`, 'success');
         updateAuthUI();
@@ -542,7 +661,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const logout = () => {
         const user = getUserData();
-        localStorage.clear();
+        localStorage.removeItem(AUTH_KEY);
+        localStorage.removeItem(LOGGED_IN_KEY);
         showNotification(`বিদায়, ${user?.username || 'ব্যবহারকারী'}!`, 'info');
         updateAuthUI();
         navigateTo('index');
@@ -554,7 +674,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const user = loggedIn ? getUserData() : null;
         containers.forEach(id => {
             const container = document.getElementById(id);
-            if (loggedIn) {
+            if (loggedIn && user) {
                 container.innerHTML = `<div class="flex items-center gap-2">${id === 'auth-container-desktop' ? `<span class="hidden lg:inline text-slate-300 mr-4">স্বাগতম, ${user.username}</span>` : ''}<a href="#dashboard" class="nav-link cta-button-secondary text-sm px-4 py-2">ড্যাশবোর্ড</a><button class="logout-btn bg-rose-600 hover:bg-rose-700 text-white font-bold py-2 px-4 rounded-lg text-sm">লগ আউট</button></div>`;
             } else {
                 container.innerHTML = `<button class="login-btn cta-button-animated text-sm">লগইন / রেজিস্টার</button>`;
@@ -566,38 +686,49 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // --- SECTION: ROUTING & PAGE NAVIGATION ---
+    // MODIFIED: Added routing for Admin panel with password check
     const navigateTo = (pageId, params = {}) => {
         if (pageId.startsWith('#')) pageId = pageId.substring(1);
-        const protectedPages = ['dashboard'];
-        if (protectedPages.includes(pageId) && !isLoggedIn()) {
-            showNotification('এই পৃষ্ঠা দেখতে লগইন করুন।', 'error');
-            showLoginModal();
-            return;
-        }
         
+        // NEW: Admin route protection
+        if (pageId === 'admin') {
+            const pass = prompt('অ্যাডমিন প্যানেলে প্রবেশের জন্য পাসওয়ার্ড দিন:');
+            if (pass !== ADMIN_PASS) {
+                showNotification('ভুল পাসওয়ার্ড।', 'error');
+                navigateTo('index'); // Go back to index if password is wrong
+                return;
+            }
+        } else {
+             const protectedPages = ['dashboard'];
+            if (protectedPages.includes(pageId) && !isLoggedIn()) {
+                showNotification('এই পৃষ্ঠা দেখতে লগইন করুন।', 'error');
+                showLoginModal();
+                return;
+            }
+        }
+
         document.querySelectorAll('.page-view').forEach(page => page.classList.remove('active'));
         const targetPage = document.getElementById(`page-${pageId}`);
         if (targetPage) {
             targetPage.classList.add('active');
             window.location.hash = pageId;
-            if (pageId === 'dashboard') {
-                initDashboardPage(params.tab); // Pass tab parameter
-            }
+            if (pageId === 'dashboard') initDashboardPage(params.tab);
+            if (pageId === 'admin') initAdminPanel(); // NEW: Initialize admin panel
         } else {
             document.getElementById('page-index').classList.add('active');
             window.location.hash = 'index';
         }
         
         document.getElementById('mobile-menu').classList.add('hidden');
+        window.scrollTo(0, 0); // Scroll to top on page change
     };
 
     
     // --- SECTION: PAGE-SPECIFIC INITIALIZATION & LOGIC ---
     function initDashboardPage(initialTab = 'overview') {
         const userData = getUserData();
-        if(!userData) return;
+        if(!userData) return navigateTo('index');
         
-        // --- Overview Tab ---
         document.getElementById('welcome-message').textContent = `স্বাগতম, ${userData.username}! আপনার আর্থিক অগ্রগতির সংক্ষিপ্ত বিবরণ।`;
         animateValue('currentBalance', 0, userData.balance, 1000, '৳ ');
         document.getElementById('currentLevel').textContent = `Level ${userData.level}`;
@@ -606,7 +737,6 @@ document.addEventListener('DOMContentLoaded', () => {
         animateValue('totalIncome', 0, totalIncome, 1000, '৳ ');
         animateValue('totalDeposit', 0, totalDeposit, 1000, '৳ ');
         
-        // Combined Transaction History
         const allHistory = [
             ...userData.depositHistory.map(i => ({...i, type: 'ডিপোজিট', class: 'text-green-400'})),
             ...userData.withdrawHistory.map(i => ({...i, type: 'উইথড্র', class: 'text-red-400'})),
@@ -614,41 +744,29 @@ document.addEventListener('DOMContentLoaded', () => {
         ].sort((a,b) => new Date(b.date) - new Date(a.date));
 
         const historyTbody = document.getElementById('transactionHistoryTableBody');
-        if(allHistory.length === 0) {
-            historyTbody.innerHTML = `<tr><td colspan="3" class="text-center text-slate-500 py-8">কোনো লেনদেন নেই।</td></tr>`;
-        } else {
-            historyTbody.innerHTML = allHistory.slice(0, 20).map(item => `
+        historyTbody.innerHTML = allHistory.length === 0 
+            ? `<tr><td colspan="3" class="text-center text-slate-500 py-8">কোনো লেনদেন নেই।</td></tr>`
+            : allHistory.slice(0, 20).map(item => `
                 <tr>
                     <td>${item.type}</td>
                     <td class="font-semibold ${item.class}">${item.type === 'উইথড্র' ? '-' : '+'} ৳${item.amount.toFixed(2)}</td>
                     <td class="text-xs text-slate-500">${new Date(item.date).toLocaleDateString('bn-BD')}</td>
                 </tr>
             `).join('');
-        }
         
         initIncomeChart(userData.incomeHistory);
-
-        // --- Deposit Tab ---
         document.getElementById('depositForm').reset();
-
-        // --- Withdraw Tab ---
         document.getElementById('withdrawPageBalance').textContent = `৳ ${userData.balance.toFixed(2)}`;
         document.getElementById('withdrawSubmitBtn').disabled = userData.balance < MIN_WITHDRAW_AMOUNT;
         document.getElementById('withdrawForm').reset();
         
-        // --- Levels Tab ---
         initLevelsContent(userData.level);
-
-        // --- Income Today Tab ---
         initIncomeTodayContent(userData);
-
-        // --- Referral Tab ---
         initReferralContent(userData);
         
-        // Activate the correct tab
-        switchTab(initialTab);
+        switchTab(initialTab || 'overview', 'dashboard');
     }
-    
+
     function initIncomeChart(incomeHistory) {
         const ctx = document.getElementById('incomeChart');
         if (!ctx) return;
@@ -695,7 +813,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="flex justify-between items-center"><span class="text-slate-400">প্রয়োজনীয় ডিপোজিট:</span><span class="font-bold text-white text-lg">৳${level.deposit}</span></div>
                         <div class="flex justify-between items-center"><span class="text-slate-400">স্ট্যাটাস:</span>${isUnlocked ? `<span class="font-semibold text-green-400">আনলকড</span>` : `<span class="font-semibold text-slate-500">লকড</span>`}</div>
                     </div>
-                    <button class="nav-link cta-button w-full ${level.bgColor} ${level.hoverBg} ${isUnlocked ? 'opacity-50 cursor-not-allowed' : ''}" ${isUnlocked ? 'disabled' : ''} onclick="document.querySelector('[data-tab=deposit]').click()">${isUnlocked ? 'ইতিমধ্যে আনলকড' : 'আনলক করুন'}</button>
+                    <button class="nav-link cta-button w-full ${level.bgColor} ${level.hoverBg} ${isUnlocked ? 'opacity-50 cursor-not-allowed' : ''}" ${isUnlocked ? 'disabled' : ''} data-tab-link="deposit">${isUnlocked ? 'ইতিমধ্যে আনলকড' : 'আনলক করুন'}</button>
                 </div>
             `;
         }).join('');
@@ -734,6 +852,171 @@ document.addEventListener('DOMContentLoaded', () => {
         referralEarningsEl.textContent = `৳ ${userData.referralData.earnings.toFixed(2)}`;
     }
 
+    // --- NEW SECTION: ADMIN PANEL LOGIC ---
+    function initAdminPanel(initialTab = 'admin-overview') {
+        const allUsers = getAllUsers();
+
+        // Overview Tab
+        const totalUsers = allUsers.length;
+        const totalDeposit = allUsers.reduce((sum, user) => sum + user.depositHistory.reduce((s, d) => s + d.amount, 0), 0);
+        const totalWithdraw = allUsers.reduce((sum, user) => sum + user.withdrawHistory.filter(w => w.status === 'approved').reduce((s, w) => s + w.amount, 0), 0);
+        const pendingWithdrawCount = allUsers.reduce((sum, user) => sum + user.withdrawHistory.filter(w => w.status === 'pending').length, 0);
+
+        document.getElementById('adminTotalUsers').textContent = totalUsers;
+        document.getElementById('adminTotalDeposit').textContent = `৳ ${totalDeposit.toFixed(2)}`;
+        document.getElementById('adminTotalWithdraw').textContent = `৳ ${totalWithdraw.toFixed(2)}`;
+        document.getElementById('adminPendingWithdraw').textContent = pendingWithdrawCount;
+
+        // Recent Activity
+        const recentActivity = [];
+        allUsers.forEach(u => {
+            u.depositHistory.forEach(d => recentActivity.push({ user: u.username, action: 'ডিপোজিট', ...d }));
+            u.withdrawHistory.forEach(w => recentActivity.push({ user: u.username, action: `উইথড্র (${w.status})`, ...w }));
+        });
+        recentActivity.sort((a,b) => new Date(b.date) - new Date(a.date));
+        const activityTbody = document.getElementById('adminRecentActivity');
+        activityTbody.innerHTML = recentActivity.slice(0, 10).map(act => `
+            <tr>
+                <td>${act.user}</td>
+                <td>${act.action}</td>
+                <td class="font-semibold ${act.action.includes('ডিপোজিট') ? 'text-green-400' : 'text-red-400'}">৳${act.amount.toFixed(2)}</td>
+                <td class="text-xs text-slate-500">${new Date(act.date).toLocaleDateString('bn-BD')}</td>
+            </tr>
+        `).join('') || `<tr><td colspan="4" class="text-center py-4">কোনো কার্যক্রম নেই</td></tr>`;
+
+
+        // Deposits Tab
+        const allDeposits = allUsers.flatMap(u => u.depositHistory.map(d => ({ ...d, username: u.username, mobile: u.mobile }))).sort((a,b) => new Date(b.date) - new Date(a.date));
+        const depositsTbody = document.getElementById('adminDepositsTableBody');
+        depositsTbody.innerHTML = allDeposits.map(d => `
+            <tr>
+                <td>${d.username}</td>
+                <td>${d.mobile}</td>
+                <td class="font-semibold text-green-400">৳${d.amount.toFixed(2)}</td>
+                <td class="font-mono text-xs">${d.trxId}</td>
+                <td class="text-xs text-slate-500">${new Date(d.date).toLocaleDateString('bn-BD')}</td>
+            </tr>
+        `).join('') || `<tr><td colspan="5" class="text-center py-4">কোনো ডিপোজিট নেই</td></tr>`;
+
+
+        // Withdrawals Tab
+        const allWithdrawals = allUsers.flatMap(u => u.withdrawHistory.map(w => ({ ...w, username: u.username, mobile: u.mobile }))).sort((a,b) => new Date(b.date) - new Date(a.date));
+        const withdrawalsTbody = document.getElementById('adminWithdrawalsTableBody');
+        withdrawalsTbody.innerHTML = allWithdrawals.map(w => {
+            const statusMap = {
+                pending: `<span class="status-badge status-pending">পেন্ডিং</span>`,
+                approved: `<span class="status-badge status-success">অ্যাপ্রুভড</span>`,
+                rejected: `<span class="status-badge status-rejected">রিজেক্টেড</span>`
+            };
+            const actionButtons = w.status === 'pending' ? `
+                <div class="flex gap-2">
+                    <button class="admin-action-btn bg-emerald-600 hover:bg-emerald-500" onclick="handleWithdrawAction('${w.mobile}', '${w.date}', 'approved')">Approve</button>
+                    <button class="admin-action-btn bg-rose-600 hover:bg-rose-500" onclick="handleWithdrawAction('${w.mobile}', '${w.date}', 'rejected')">Reject</button>
+                </div>
+            ` : 'N/A';
+            return `
+                <tr>
+                    <td>${w.username}</td>
+                    <td>${w.bKashNumber}</td>
+                    <td class="font-semibold text-red-400">৳${w.amount.toFixed(2)}</td>
+                    <td>${statusMap[w.status]}</td>
+                    <td class="text-xs text-slate-500">${new Date(w.date).toLocaleDateString('bn-BD')}</td>
+                    <td>${actionButtons}</td>
+                </tr>`
+        }).join('') || `<tr><td colspan="6" class="text-center py-4">কোনো উইথড্র রিকোয়েস্ট নেই</td></tr>`;
+        
+
+        // All Users Tab
+        const usersTbody = document.getElementById('adminUsersTableBody');
+        usersTbody.innerHTML = allUsers.map(u => `
+            <tr>
+                <td>${u.username}</td>
+                <td>${u.mobile}</td>
+                <td class="font-semibold">৳${u.balance.toFixed(2)}</td>
+                <td>${u.level}</td>
+                <td class="text-xs text-slate-500">${new Date(u.joinDate).toLocaleDateString('bn-BD')}</td>
+                <td><button class="admin-action-btn bg-sky-600 hover:bg-sky-500" onclick="openEditUserModal('${u.mobile}')">Edit</button></td>
+            </tr>
+        `).join('') || `<tr><td colspan="6" class="text-center py-4">কোনো ব্যবহারকারী নেই</td></tr>`;
+
+        switchTab(initialTab, 'admin');
+    }
+
+    // NEW: Handle withdraw status changes from admin panel
+    window.handleWithdrawAction = (mobile, date, newStatus) => {
+        let allUsers = getAllUsers();
+        const userIndex = allUsers.findIndex(u => u.mobile === mobile);
+        if (userIndex === -1) return;
+
+        const withdrawIndex = allUsers[userIndex].withdrawHistory.findIndex(w => w.date === date);
+        if (withdrawIndex === -1) return;
+        
+        // If request is rejected, refund the amount to the user
+        if (newStatus === 'rejected' && allUsers[userIndex].withdrawHistory[withdrawIndex].status === 'pending') {
+            allUsers[userIndex].balance += allUsers[userIndex].withdrawHistory[withdrawIndex].amount;
+        }
+        
+        allUsers[userIndex].withdrawHistory[withdrawIndex].status = newStatus;
+
+        saveAllUsers(allUsers);
+
+        // Update current user's data if they are the one being modified
+        const currentUser = getUserData();
+        if(currentUser && currentUser.mobile === mobile) {
+            localStorage.setItem(AUTH_KEY, JSON.stringify(allUsers[userIndex]));
+        }
+        
+        showNotification(`উইথড্র রিকোয়েস্ট ${newStatus} হয়েছে।`, 'success');
+        initAdminPanel('admin-withdrawals');
+    };
+
+    // NEW: Handle opening and populating the edit user modal
+    window.openEditUserModal = (mobile) => {
+        const allUsers = getAllUsers();
+        const user = allUsers.find(u => u.mobile === mobile);
+        if (!user) return;
+
+        document.getElementById('editUserMobile').value = user.mobile;
+        document.getElementById('editUserBalance').value = user.balance;
+        document.getElementById('editUserLevel').value = user.level;
+        document.getElementById('editUserModal').classList.add('active');
+    };
+    
+    // NEW: Close edit user modal
+    document.getElementById('editUser-close-btn').addEventListener('click', () => {
+        document.getElementById('editUserModal').classList.remove('active');
+    });
+
+    // NEW: Handle form submission for editing a user
+    document.getElementById('editUserForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const mobile = document.getElementById('editUserMobile').value;
+        const newBalance = parseFloat(document.getElementById('editUserBalance').value);
+        const newLevel = parseInt(document.getElementById('editUserLevel').value, 10);
+
+        let allUsers = getAllUsers();
+        const userIndex = allUsers.findIndex(u => u.mobile === mobile);
+
+        if (userIndex > -1) {
+            allUsers[userIndex].balance = newBalance;
+            allUsers[userIndex].level = newLevel;
+            saveAllUsers(allUsers);
+
+            // Update current user's data if they are the one being edited
+            const currentUser = getUserData();
+            if(currentUser && currentUser.mobile === mobile) {
+                localStorage.setItem(AUTH_KEY, JSON.stringify(allUsers[userIndex]));
+            }
+
+            showNotification('ব্যবহারকারীর তথ্য সফলভাবে আপডেট হয়েছে।', 'success');
+            document.getElementById('editUserModal').classList.remove('active');
+            initAdminPanel('admin-users');
+        } else {
+            showNotification('ব্যবহারকারী খুঁজে পাওয়া যায়নি।', 'error');
+        }
+    });
+
+
     // --- SECTION: EVENT LISTENERS ---
     
     // Global navigation listener
@@ -747,10 +1030,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Dashboard Tab switcher
-    function switchTab(tabId) {
-        document.querySelectorAll('#dashboard-tabs .dashboard-tab-button').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.dashboard-tab-content').forEach(c => c.classList.remove('active'));
+    // MODIFIED: Tab switcher for both dashboards
+    function switchTab(tabId, panel = 'dashboard') {
+        document.querySelectorAll(`#${panel}-tabs .${panel}-tab-button`).forEach(t => t.classList.remove('active'));
+        document.querySelectorAll(`.${panel}-tab-content`).forEach(c => c.classList.remove('active'));
+        
         const tabButton = document.querySelector(`button[data-tab="${tabId}"]`);
         const tabContent = document.getElementById(`tab-${tabId}`);
         if(tabButton && tabContent){
@@ -759,10 +1043,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     document.getElementById('dashboard-tabs').addEventListener('click', (e) => {
-        if(e.target.matches('.dashboard-tab-button')) {
-            switchTab(e.target.dataset.tab);
-        }
+        if(e.target.matches('.dashboard-tab-button')) switchTab(e.target.dataset.tab, 'dashboard');
     });
+    // NEW: Listener for admin tabs
+    document.getElementById('admin-tabs').addEventListener('click', (e) => {
+        if(e.target.matches('.admin-tab-button')) switchTab(e.target.dataset.tab, 'admin');
+    });
+    
     
     // Deposit Form Logic
     document.getElementById('depositForm').addEventListener('submit', (e) => {
@@ -779,37 +1066,61 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         setTimeout(() => {
-            addHistory('deposit', { amount, trxId, date: new Date().toISOString() });
-            addBalance(amount);
             const user = getUserData();
             const oldLevel = user.level;
-            const totalDeposit = user.depositHistory.reduce((sum, item) => sum + item.amount, 0);
+            addHistory('deposit', { amount, trxId, date: new Date().toISOString() });
+            addBalance(amount);
+
+            // Re-fetch user data after updates
+            const updatedUser = getUserData();
+            const totalDeposit = updatedUser.depositHistory.reduce((sum, item) => sum + item.amount, 0);
             let newLevel = 0;
             if (totalDeposit >= 100) newLevel = 4; else if (totalDeposit >= 80) newLevel = 3; else if (totalDeposit >= 50) newLevel = 2; else if (totalDeposit >= 30) newLevel = 1;
             
             if (newLevel > oldLevel) {
-                user.level = newLevel;
-                saveUserData(user);
+                updatedUser.level = newLevel;
+                saveUserData(updatedUser);
                 showLevelUpModal(newLevel);
             }
 
             showConfirmationModal('ডিপোজিট সফল!', `আপনার ৳${amount} ডিপোজিট রিকোয়েস্ট গ্রহণ করা হয়েছে।`);
             document.getElementById('depositForm').reset();
             btn.disabled = false; btn.firstElementChild.textContent = 'ডিপোজিট কনফার্ম করুন';
-            initDashboardPage('overview'); // Refresh dashboard
+            initDashboardPage('overview');
         }, 1500);
     });
+
     document.getElementById('copyButton').addEventListener('click', () => {
-        const text = document.getElementById('bKashNumberDeposit').textContent;
-        navigator.clipboard.writeText(text).then(() => showNotification('বিকাশ নম্বর কপি করা হয়েছে!', 'success'));
+        navigator.clipboard.writeText(document.getElementById('bKashNumberDeposit').textContent).then(() => showNotification('বিকাশ নম্বর কপি করা হয়েছে!', 'success'));
     });
     document.getElementById('copyReferralButton').addEventListener('click', () => {
-        const text = document.getElementById('referralLink').textContent;
-        navigator.clipboard.writeText(text).then(() => showNotification('রেফারেল লিংক কপি করা হয়েছে!', 'success'));
+        navigator.clipboard.writeText(document.getElementById('referralLink').textContent).then(() => showNotification('রেফারেল লিংক কপি করা হয়েছে!', 'success'));
     });
     
     // Withdraw Form Logic
-    document.getElementById('withdrawForm').addEventListener('submit', async (e) => { /* ... (Same as original) ... */ });
+    document.getElementById('withdrawForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const amount = parseFloat(document.getElementById('withdrawAmount').value);
+        const bKashNumber = document.getElementById('bKashNumberWithdraw').value.trim();
+
+        if (isNaN(amount) || amount <= 0 || !bKashNumber.match(/^01[3-9]\d{8}$/)) {
+            showNotification('সঠিক পরিমাণ ও বিকাশ নাম্বার দিন।', 'error');
+            return;
+        }
+        if (amount < MIN_WITHDRAW_AMOUNT) {
+            showNotification(`সর্বনিম্ন উইথড্র পরিমাণ ৳${MIN_WITHDRAW_AMOUNT}।`, 'error');
+            return;
+        }
+        if (!deductBalance(amount)) {
+            showNotification('অপর্যাপ্ত ব্যালেন্স।', 'error');
+            return;
+        }
+
+        addHistory('withdraw', { amount, bKashNumber, status: 'pending', date: new Date().toISOString() });
+        showConfirmationModal('রিকোয়েস্ট সফল!', 'আপনার উইথড্র রিকোয়েস্ট গ্রহণ করা হয়েছে। এটি শীঘ্রই প্রসেস করা হবে।');
+        document.getElementById('withdrawForm').reset();
+        initDashboardPage('withdraw');
+    });
 
     // Income Claim Logic
     document.getElementById('claim-button').addEventListener('click', () => {
@@ -820,8 +1131,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const incomeAmount = INCOME_BY_LEVEL[user.level] || 0;
         addBalance(incomeAmount);
         addHistory('income', { amount: incomeAmount, level: user.level, date: new Date().toISOString() });
-        user.lastClaimedDate = today;
-        saveUserData(user);
+        
+        const updatedUser = getUserData(); // Re-fetch to get latest data
+        updatedUser.lastClaimedDate = today;
+        saveUserData(updatedUser);
         
         showNotification(`অভিনন্দন! ৳${incomeAmount.toFixed(2)} আপনার ব্যালেন্সে যোগ হয়েছে।`, 'success');
         triggerCoinAnimation();
@@ -855,7 +1168,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         
         handleRoute(); // Load initial page
-        console.log("Taka Money SPA Initialized Successfully.");
+        console.log("Taka Money SPA Initialized Successfully with Admin Panel.");
     };
     
     const initScrollReveal = () => {
